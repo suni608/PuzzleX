@@ -16,11 +16,12 @@ ENV PORT=8000
 WORKDIR /app
 
 # Install Python requirements
-COPY requirements.txt /app/
+# (Paths are relative to the repository root since Docker context is the root)
+COPY backend/requirements.txt /app/
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy C++ source files and compile the engine
-COPY ../cpp_engine /app/cpp_engine
+COPY cpp_engine /app/cpp_engine
 WORKDIR /app/cpp_engine/src
 RUN g++ -O3 -std=c++17 main.cpp -o ../solver
 
@@ -28,7 +29,8 @@ RUN g++ -O3 -std=c++17 main.cpp -o ../solver
 WORKDIR /app
 
 # Copy the rest of the backend files
-COPY . /app/
+COPY backend/app /app/app
+COPY backend/run.py /app/
 
 # Expose port
 EXPOSE 8000
