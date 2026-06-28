@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+backend/venv/
+backend/puzzlex.db
+
+# C++
+cpp_engine/solver.exe
+*.o
+*.obj
+*.exe
+
+# Node / React
+node_modules/
+dist/
+.eslintcache
+*.local
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
