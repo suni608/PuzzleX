@@ -2,11 +2,20 @@ import subprocess
 import json
 import os
 
-# Resolve path to solver.exe
-# Relative path from backend/app/solver_interface.py to cpp_engine/solver.exe
-SOLVER_EXE = os.path.abspath(os.path.join(
-    os.path.dirname(__file__), "..", "..", "cpp_engine", "solver.exe"
-))
+# Resolve path to solver binary
+SOLVER_EXE = os.getenv("SOLVER_PATH")
+
+if not SOLVER_EXE:
+    # Auto-detect binary name based on operating system
+    base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "cpp_engine"))
+    exe_path = os.path.join(base_dir, "solver.exe")
+    bin_path = os.path.join(base_dir, "solver")
+    
+    if os.path.exists(bin_path):
+        SOLVER_EXE = bin_path
+    else:
+        # Default fallback (Windows dev environment)
+        SOLVER_EXE = exe_path
 
 def run_cpp_solver(payload: dict) -> dict:
     """
