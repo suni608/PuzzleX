@@ -6,16 +6,24 @@ import os
 SOLVER_EXE = os.getenv("SOLVER_PATH")
 
 if not SOLVER_EXE:
-    # Auto-detect binary name based on operating system
-    base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "cpp_engine"))
-    exe_path = os.path.join(base_dir, "solver.exe")
-    bin_path = os.path.join(base_dir, "solver")
+    # Auto-detect binary name based on operating system and environment (local vs Docker)
+    base_dir_local = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "cpp_engine"))
+    base_dir_docker = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "cpp_engine"))
     
-    if os.path.exists(bin_path):
-        SOLVER_EXE = bin_path
+    # Check both paths to see if solver or solver.exe is present
+    for base_dir in [base_dir_docker, base_dir_local]:
+        exe_path = os.path.join(base_dir, "solver.exe")
+        bin_path = os.path.join(base_dir, "solver")
+        
+        if os.path.exists(bin_path):
+            SOLVER_EXE = bin_path
+            break
+        elif os.path.exists(exe_path):
+            SOLVER_EXE = exe_path
+            break
     else:
-        # Default fallback (Windows dev environment)
-        SOLVER_EXE = exe_path
+        # Default fallback if nothing exists yet
+        SOLVER_EXE = os.path.join(base_dir_local, "solver.exe")
 
 def run_cpp_solver(payload: dict) -> dict:
     """
